@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class ExelSheet {
     String name;
-    public static ArrayList<ArrayList<String>> table = new ArrayList<>();
+    ArrayList<ArrayList<String>> table = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -12,11 +12,11 @@ public class ExelSheet {
         this.name = name;
     }
 
-    public static ArrayList<ArrayList<String>> getTable() {
+    public ArrayList<ArrayList<String>> getTable() {
         return table;
     }
 
-    public static void setTable(ArrayList<ArrayList<String>> table) {
-        ExelSheet.table = table;
+    public void setTable(ArrayList<ArrayList<String>> table) {
+        this.table = table;
     }
 }

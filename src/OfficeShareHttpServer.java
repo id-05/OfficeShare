@@ -1,23 +1,18 @@
-
-
 import com.sun.net.httpserver.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 public class OfficeShareHttpServer {
     HttpServer server;
+    ExelDocInList exelDoc;
 
-
-    public void main(int WebPort, HttpServer server) throws Exception {
-        this.server = server;
+    public void main(int WebPort, ExelDocInList exelDoc) throws Exception {
+        this.exelDoc = exelDoc;
         server = HttpServer.create();
         server.bind(new InetSocketAddress(WebPort), 0);
         HttpContext context = server.createContext("/", new EchoHandler());
-        //HttpContext context2 = server.createContext("/json", new AndroidHandler());
         context.setAuthenticator(new Auth());
         server.setExecutor(null);
         server.start();
@@ -35,29 +30,30 @@ public class OfficeShareHttpServer {
             builder.append("</head>");
             builder.append("<body bgcolor = \"#ffffff\" text = \"#000000\">");
             builder.append("<p style=\"text-align: center;\">&nbsp;</p>");
-            builder.append("<h1 style=\"text-align: center;\"><strong>Office Share</strong></h1>");
+            builder.append("<h1 style=\"text-align: center;\"><strong>"+exelDoc.getName()+"</strong></h1>");
             builder.append("<p style=\"text-align: center;\">&nbsp;</p>");
             builder.append("<p>&nbsp;</p>");
-            builder.append("<p style=\"text-align: center;\">&nbsp;</p>");
-            builder.append("<p style=\"text-align: center;\">&nbsp;</p>");
-            builder.append("<h2>"+MainForm.myExcelSheet.getSheetName()+"</h2>");
-            builder.append("<table style=\"height: 68px; border-color: black; width: 800px; margin-left: auto; margin-right: auto;\" border=\"4\" cellpadding=\"4\"><caption>&nbsp;</caption>");
-            builder.append("<tbody>");
-            builder.append("<tr>");
 
-            for(int i=0;i<MainForm.tableList.size();i++) {
-                builder.append("<h1><tr>");
-                ArrayList<String> bufList = MainForm.tableList.get(i);
-                for(int j=0;j<bufList.size();j++){
-                    builder.append("<td style=\"width: 41px; text-align: center;\">" + bufList.get(j) + "</td>");
+
+            for(ExelSheet bufSheet:exelDoc.getSheets()) {
+                ArrayList<ArrayList<String>> tableList = bufSheet.getTable();
+                builder.append("<h2>" + bufSheet.getName() + "</h2>");
+                builder.append("<table style=\"height: 68px; border-color: black; width: 800px; margin-left: auto; margin-right: auto;\" border=\"4\" cellpadding=\"4\"><caption>&nbsp;</caption>");
+                builder.append("<tbody>");
+                builder.append("<tr>");
+                for (int i = 0; i < tableList.size(); i++) {
+                    builder.append("<h1><tr>");
+                    ArrayList<String> bufList = tableList.get(i);
+                    for (int j = 0; j < bufList.size(); j++) {
+                        builder.append("<td style=\"width: 41px; text-align: center;\">" + bufList.get(j) + "</td>");
+                    }
+                    builder.append("</tr></h1>");
                 }
-                builder.append("</tr></h1>");
-
+                builder.append("</tbody>");
+                builder.append("</table>");
+                builder.append("<p>&nbsp;</p>");
             }
 
-            builder.append("</tbody>");
-            builder.append("</table>");
-            builder.append("<p>&nbsp;</p>");
             builder.append("<p>&nbsp;</p>");
             builder.append("<p>&nbsp;</p>");
             builder.append("<p>&nbsp;</p>");
