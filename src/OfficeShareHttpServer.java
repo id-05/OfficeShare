@@ -23,7 +23,7 @@ public class OfficeShareHttpServer {
         public void handle(HttpExchange exchange) throws IOException {
             StringBuilder builder = new StringBuilder();
             builder.append("<head>");
-            builder.append("<meta charset=\"utf-8\">");
+            //builder.append("<meta charset=\"utf-8\">");
             builder.append("<title>Office Share</title>");
             builder.append("<style type=\"text/css\">");
             builder.append("</style>");
@@ -33,10 +33,16 @@ public class OfficeShareHttpServer {
             builder.append("<h1 style=\"text-align: center;\"><strong>"+exelDoc.getName()+"</strong></h1>");
             builder.append("<p style=\"text-align: center;\">&nbsp;</p>");
             builder.append("<p>&nbsp;</p>");
-
-
+            for(ExelSheet bufSheet:exelDoc.getSheets()) {
+                builder.append("<p><a href=#" + bufSheet.getName() + ">"+bufSheet.getName()+"</a></p>");
+            }
+            builder.append("<p>&nbsp;</p>");
+            builder.append("<p>&nbsp;</p>");
+            builder.append("<h2 style=\"text-align: center;\"><input type=\"button\" onclick='window.location.reload()' value=\"RELOAD\" /></h2>");
+            builder.append("<p>&nbsp;</p>");
             for(ExelSheet bufSheet:exelDoc.getSheets()) {
                 ArrayList<ArrayList<String>> tableList = bufSheet.getTable();
+                builder.append("<p><a name=" + bufSheet.getName() + "></a></p>");
                 builder.append("<h2>" + bufSheet.getName() + "</h2>");
                 builder.append("<table style=\"height: 68px; border-color: black; width: 800px; margin-left: auto; margin-right: auto;\" border=\"4\" cellpadding=\"4\"><caption>&nbsp;</caption>");
                 builder.append("<tbody>");

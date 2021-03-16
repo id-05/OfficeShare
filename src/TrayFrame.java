@@ -6,15 +6,15 @@ import java.net.URL;
 
 public class TrayFrame extends JFrame {
     public static TrayFrame app;
-    private TrayIcon trayIcon;
-    private SystemTray systemTray = SystemTray.getSystemTray();
+    private final TrayIcon trayIcon;
+    private final SystemTray systemTray = SystemTray.getSystemTray();
     public boolean chetTray = false;
 
     public TrayFrame() throws IOException {
-        super("Сворачиваем в трей");
+        super("Minimize to tray");
         URL imageURL = this.getClass().getResource("/Ikonka.png");
         Image icon = Toolkit.getDefaultToolkit().getImage(imageURL);
-        trayIcon = new TrayIcon(icon, "Сворачиваем в трей");
+        trayIcon = new TrayIcon(icon, "Minimize to tray");
         trayIcon.setImageAutoSize(true);
         trayIcon.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -46,18 +46,15 @@ public class TrayFrame extends JFrame {
             }
 
             public void mouseMoved(MouseEvent ev) {
-                boolean flg = false;
-                trayIcon.setToolTip("Двойной щелчок - развернуть");
+                trayIcon.setToolTip("Double click - expand");
             }
         };
 
         trayIcon.addMouseMotionListener(mouM);
-        addWindowStateListener(new WindowStateListener() {
-            public void windowStateChanged(WindowEvent ev) {
-                if (ev.getNewState() == JFrame.ICONIFIED) {
-                    setVisible(false);
-                    addTray();
-                }
+        addWindowStateListener(ev -> {
+            if (ev.getNewState() == JFrame.ICONIFIED) {
+                setVisible(false);
+                addTray();
             }
         });
     }
@@ -83,7 +80,7 @@ public class TrayFrame extends JFrame {
 
         app.addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent winEvent) {
-                System.exit(0);//при закрытии окна завершаем программу
+                System.exit(0);
             }
 
             public void windowActivated(WindowEvent winEvent) {
